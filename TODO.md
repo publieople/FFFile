@@ -4,7 +4,7 @@
 
 - 明确核心功能与扩展需求
 - 选定主技术栈：React + Vite + Electron + Node.js
-- UI库：Ant Design（可后续自定义）
+- UI库：Tailwind CSS + Shadcn/ui
 - 状态管理：Zustand/Redux Toolkit
 - 文件操作：Node.js fs/promises
 - 文件搜索：集成 Everything（Windows），fd/locate（macOS/Linux）
