@@ -1,7 +1,9 @@
-import { app, BrowserWindow } from "electron";
+import { app, BrowserWindow, ipcMain } from "electron";
 import { createRequire } from "node:module";
 import { fileURLToPath } from "node:url";
 import path from "node:path";
+import fs from "node:fs/promises";
+import os from "node:os";
 createRequire(import.meta.url);
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 process.env.APP_ROOT = path.join(__dirname, "..");
@@ -38,6 +40,29 @@ app.on("activate", () => {
   }
 });
 app.whenReady().then(createWindow);
+ipcMain.handle("get-home-dir", () => os.homedir());
+ipcMain.handle("get-desktop-dir", () => path.join(os.homedir(), "Desktop"));
+ipcMain.handle("get-files", async (_, dirPath) => {
+  try {
+    const dirents = await fs.readdir(dirPath, { withFileTypes: true });
+    const files = await Promise.all(dirents.map(async (dirent) => {
+      const res = path.resolve(dirPath, dirent.name);
+      const stats = await fs.stat(res);
+      return {
+        name: dirent.name,
+        path: res,
+        isDirectory: dirent.isDirectory(),
+        size: stats.size,
+        createdAt: stats.birthtime,
+        modifiedAt: stats.mtime
+      };
+    }));
+    return files;
+  } catch (error) {
+    console.error("Error reading directory:", error);
+    return [];
+  }
+});
 export {
   MAIN_DIST,
   RENDERER_DIST,

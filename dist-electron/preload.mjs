@@ -16,7 +16,9 @@ electron.contextBridge.exposeInMainWorld("ipcRenderer", {
   invoke(...args) {
     const [channel, ...omit] = args;
     return electron.ipcRenderer.invoke(channel, ...omit);
-  }
-  // You can expose other APTs you need here.
-  // ...
+  },
+  // API for file operations
+  getFiles: (path) => electron.ipcRenderer.invoke("get-files", path),
+  getHomeDir: () => electron.ipcRenderer.invoke("get-home-dir"),
+  getDesktopDir: () => electron.ipcRenderer.invoke("get-desktop-dir")
 });

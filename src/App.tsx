@@ -1,11 +1,15 @@
+import { useEffect } from 'react';
+import Layout from './components/Layout';
+import { useStore } from './store';
+
 function App() {
-  return (
-    <div className="flex h-screen w-full items-center justify-center bg-gray-900">
-      <h1 className="text-4xl font-bold text-white">
-        FFFile - Hello World!
-      </h1>
-    </div>
-  )
+  const initialize = useStore((state) => state.initialize);
+
+  useEffect(() => {
+    initialize();
+  }, [initialize]);
+
+  return <Layout />;
 }
 
-export default App
+export default App;

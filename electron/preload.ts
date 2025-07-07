@@ -19,6 +19,8 @@ contextBridge.exposeInMainWorld('ipcRenderer', {
     return ipcRenderer.invoke(channel, ...omit)
   },
 
-  // You can expose other APTs you need here.
-  // ...
+  // API for file operations
+  getFiles: (path: string) => ipcRenderer.invoke('get-files', path),
+  getHomeDir: () => ipcRenderer.invoke('get-home-dir'),
+  getDesktopDir: () => ipcRenderer.invoke('get-desktop-dir'),
 })
